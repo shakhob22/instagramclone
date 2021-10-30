@@ -21,22 +21,6 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-/*
-  Widget startPage() {
-    return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (BuildContext context, snapshot) {
-        if (snapshot.hasData) {
-          Prefs.saveUserId(snapshot.data!.uid);
-          return const HomePage();
-        } else {
-          Prefs.removeUserId();
-          return const SignInPage();
-        }
-      },
-    );
-  }
-*/
   const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {

@@ -27,23 +27,11 @@ class _HomePageState extends State<HomePage> {
 
 
   _initNotification() {
-
-
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-
-      print('Got a message whilst in the foreground!');
-      print('Message data: ${message.data}');
-
       Utils.showLocalNotification({
         'title': message.notification!.title,
         'body': message.notification!.body
       });
-
-
-
-      /*if (message.notification != null) {
-        print('Message also contained a notification: ${message.notification}');
-      }*/
     });
   }
 

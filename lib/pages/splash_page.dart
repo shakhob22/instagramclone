@@ -20,11 +20,6 @@ class _SplashPageState extends State<SplashPage> {
 
   void _initNotification() {
     FirebaseMessaging.instance.requestPermission(sound: true, badge: true, alert: true, );
-    /*_firebaseMessaging.getNotificationSettings
-    _firebaseMessaging.onIosSettingsRegistered.listen((IosNotificationSettings settings) {
-      print("Settings registered: $settings");
-    });*/
-
     FirebaseMessaging.instance.getToken().then((String? token) {
       assert(token != null);
       print(token);
