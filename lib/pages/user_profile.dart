@@ -127,7 +127,7 @@ class _UserProfileState extends State<UserProfile> {
                     ),
                   ),
                   const SizedBox(height: 10,),
-                  Text(fullName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
+                  Text(fullName, overflow: TextOverflow.ellipsis, softWrap: false, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
                   const SizedBox(height: 3,),
                   //Text(email, style: TextStyle(color: Colors.grey.shade700),),
                   Stack(
@@ -137,13 +137,13 @@ class _UserProfileState extends State<UserProfile> {
                         onPressed: (){
                           _apiUnfollowUser();
                         },
-                        child: const Text("Following"),
+                        child: const Text("Following", overflow: TextOverflow.ellipsis, softWrap: false,),
                       ) :
                       ElevatedButton(
                         onPressed: (){
                           _apiFollowUser();
                         },
-                        child: const Text("  Follow  "),
+                        child: const Text("  Follow  ", overflow: TextOverflow.ellipsis, softWrap: false,),
                       )
                     ],
                   ),
@@ -158,7 +158,7 @@ class _UserProfileState extends State<UserProfile> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(countPosts.toString(), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
-                              const Text("POSTS", style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16, color: Colors.grey),)
+                              const Text("POSTS", overflow: TextOverflow.ellipsis, softWrap: false, style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16, color: Colors.grey),)
                             ],
                           ),
                         ),
@@ -172,7 +172,7 @@ class _UserProfileState extends State<UserProfile> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(countFollowers.toString(), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
-                              const Text("FOLLOWERS", overflow: TextOverflow.fade, softWrap: false, style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16, color: Colors.grey),)
+                              const Text("FOLLOWERS", overflow: TextOverflow.ellipsis, softWrap: false, style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16, color: Colors.grey),)
                             ],
                           ),
                         ),
@@ -186,7 +186,7 @@ class _UserProfileState extends State<UserProfile> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(countFollowing.toString(), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
-                              const Text("Following", style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16, color: Colors.grey),)
+                              const Text("Following", overflow: TextOverflow.ellipsis, softWrap: false, style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16, color: Colors.grey),)
                             ],
                           ),
                         )

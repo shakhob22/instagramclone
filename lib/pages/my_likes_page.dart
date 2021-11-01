@@ -112,8 +112,8 @@ class _MyLikesPageState extends State<MyLikesPage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(post.fullname!, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
-                        Text(post.date!, style: const TextStyle(fontSize: 14),)
+                        Text(post.fullname!, overflow: TextOverflow.ellipsis, softWrap: false, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
+                        Text(post.date!, overflow: TextOverflow.ellipsis, softWrap: false, style: const TextStyle(fontSize: 14),)
                       ],
                     )
                   ],

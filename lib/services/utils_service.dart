@@ -14,6 +14,22 @@ import 'package:share_plus/share_plus.dart';
 
 class Utils {
 
+  static bool checkEmail(String email) {
+    bool emailValid = false;
+    if (email.isNotEmpty){
+      emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email);
+    }
+    return emailValid;
+  }
+
+  static bool checkPassword(String password) {
+    bool passwordValid = false;
+    if (password.isNotEmpty) {
+      passwordValid = RegExp(r'(?=.*?[0-9]).{8,}$').hasMatch(password);
+    }
+    return passwordValid;
+  }
+
   static void fireToast(String msg) {
     Fluttertoast.showToast(
         msg: msg,
@@ -162,7 +178,6 @@ class Utils {
     );
 
   }
-
 
 }
 

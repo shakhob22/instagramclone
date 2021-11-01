@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:instagramclone/models/post_model.dart';
-import 'package:instagramclone/services/data_service.dart';
 import 'package:instagramclone/services/file_service.dart';
 class MyUploadPage extends StatefulWidget {
   final PageController? pageController;
@@ -41,26 +40,13 @@ class _MyUploadPageState extends State<MyUploadPage> {
   }
 
   void _apiStorePost(Post post) async {
-    Post posted = await DataService.storePost(post);
     setState(() {
       isLoading = false;
     });
     captionController.text = "";
     image = null;
     widget.pageController!.animateToPage(4, duration: const Duration(milliseconds: 200), curve: Curves.easeIn);
-    /*DataService.storeFeed(posted).then((value) => {
-      _moveToFeed()
-    });*/
   }
-
-  /*void _moveToFeed() {
-    setState(() {
-      isLoading = false;
-    });
-    captionController.text = "";
-    image = null;
-    widget.pageController!.animateToPage(0, duration: const Duration(milliseconds: 200), curve: Curves.easeIn);
-  }*/
 
   @override
   Widget build(BuildContext context) {

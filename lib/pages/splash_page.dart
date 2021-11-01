@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -32,17 +31,17 @@ class _SplashPageState extends State<SplashPage> {
     super.initState();
     _initNotification();
 
-    Timer(const Duration(seconds: 1), () {
-      FirebaseAuth.instance
-          .authStateChanges()
-          .listen((User? user) {
+
+    FirebaseAuth.instance
+        .authStateChanges()
+        .listen((User? user) {
           if (user == null) {
             Navigator.pushReplacementNamed(context, SignInPage.id);
           } else {
             Navigator.pushReplacementNamed(context, HomePage.id);
           }
         });
-    });
+
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   }
 

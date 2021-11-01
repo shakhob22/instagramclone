@@ -21,27 +21,18 @@ class _SignInPageState extends State<SignInPage> {
   var passwordController = TextEditingController();
   bool isLoading = false;
 
-  void _doSignIn(){
+  Future<void> _doSignIn() async {
     String email = emailController.text.toString().trim();
     String password = passwordController.text.toString().trim();
-    bool emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email);
-    bool passwordValid = RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$').hasMatch(password);
 
-    if (email.isEmpty || password.isEmpty){
-      Utils.fireToast("Invalid email address or password");
-      return;
-    }
-    if (!emailValid) {
+    if (!Utils.checkEmail(email)) {
       Utils.fireToast("Invalid email address");
       return;
     }
-    if (!passwordValid) {
-      Utils.fireToast("Invalid Password\n"
-          "Minimum 1 Upper case\n"
-          "Minimum 1 lowercase\n"
-          "Minimum 1 Numeric Number\n"
-          "Minimum 1 Special Character\n"
-          "Common Allow Character ( ! @ # \$ & * ~ )");
+    if (!Utils.checkPassword(password)) {
+      Utils.fireToast("Invalid password: \n"
+          "Minimum 1 uppercase or lowercase\n"
+          "Minimum 1 numeric number\n");
       return;
     }
 
@@ -49,8 +40,8 @@ class _SignInPageState extends State<SignInPage> {
       isLoading = true;
     });
 
-    AuthService.signInUser(email, password).then((value) async => {
-      isLoading = false,
+    await AuthService.signInUser(email, password).then((value) async => {
+      setState(() {isLoading = false;}),
       await Prefs.saveUserId(value!.uid),
       Navigator.pushReplacementNamed(context, HomePage.id)
     });
@@ -158,16 +149,18 @@ class _SignInPageState extends State<SignInPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
-                        "Don't have an account",
-                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      Expanded(
+                        child: const Text(
+                          "Don't have an account", overflow: TextOverflow.ellipsis, softWrap: false,
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
                       ),
                       TextButton(
                         onPressed: (){
                           Navigator.pushReplacementNamed(context, SignUpPage.id);
                         },
                         child: const Text(
-                            "Sign Up",
+                            "Sign Up", overflow: TextOverflow.ellipsis, softWrap: false,
                             style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
                       )
                     ],

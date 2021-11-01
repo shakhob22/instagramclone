@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:instagramclone/models/post_model.dart';
 import 'package:instagramclone/services/data_service.dart';
 import 'package:instagramclone/services/utils_service.dart';
-import 'package:share_plus/share_plus.dart';
 
 class MyFeedPage extends StatefulWidget {
   final PageController? pageController;
@@ -122,8 +121,8 @@ class _MyFeedPageState extends State<MyFeedPage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(post.fullname!, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
-                        Text(post.date!, style: const TextStyle(fontSize: 14),)
+                        Text(post.fullname!, overflow: TextOverflow.fade, softWrap: false, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
+                        Text(post.date!, overflow: TextOverflow.fade, softWrap: false, style: const TextStyle(fontSize: 14),)
                       ],
                     )
                   ],

@@ -31,40 +31,37 @@ class _SignUpPageState extends State<SignUpPage> {
     String email = emailController.text.toString().trim();
     String password = passwordController.text.toString().trim();
     String cpassword = cpasswordController.text.toString().trim();
-    bool emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email);
-    bool passwordValid = RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$').hasMatch(password);
 
-    if (name.isEmpty || email.isEmpty || password.isEmpty || cpassword.isEmpty || password != cpassword) {
-      Utils.fireToast("Invalid email address or password");
+    if (password != cpassword) {
+      Utils.fireToast("Invalid Password");
       return;
     }
-    if (!emailValid) {
+
+    if (!Utils.checkEmail(email)) {
       Utils.fireToast("Invalid email address");
       return;
     }
-    if (!passwordValid) {
+    if (!Utils.checkPassword(password)) {
       Utils.fireToast("Invalid Password\n"
-          "Minimum 1 Upper case\n"
-          "Minimum 1 lowercase\n"
-          "Minimum 1 Numeric Number\n"
-          "Minimum 1 Special Character\n"
-          "Common Allow Character ( ! @ # \$ & * ~ )");
+          "Minimum 1 uppercase or lowercase\n"
+          "Minimum 1 Numeric Number\n");
       return;
     }
-
     setState(() {
-      isLoading = false;
+      isLoading = true;
     });
 
     User user = User(fullname: name, email: email, password: password);
 
     await AuthService.signUpUser(name, email, password).then((value) async => {
-      await Prefs.saveUserId(value!.uid),
-    });
-
-    DataService.storeUser(user).then((value) async => {
-      isLoading = false,
-      Navigator.pushReplacementNamed(context, HomePage.id)
+      if (value != null) {
+        await Prefs.saveUserId(value.uid),
+        await DataService.storeUser(user),
+        await Navigator.pushReplacementNamed(context, HomePage.id),
+      },
+      setState(() {
+        isLoading = false;
+      }),
     });
 
   }
@@ -211,9 +208,11 @@ class _SignUpPageState extends State<SignUpPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
-                        "Already have an account",
-                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      Expanded(
+                        child: const Text(
+                          "Already have an account",
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
                       ),
                       TextButton(
                         onPressed: (){

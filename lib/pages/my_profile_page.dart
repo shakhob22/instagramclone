@@ -153,9 +153,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
                     ),
                   ],
                 ),
-                Text(fullName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
+                Text(fullName, overflow: TextOverflow.ellipsis, softWrap: false, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
                 const SizedBox(height: 3,),
-                Text(email, style: TextStyle(color: Colors.grey.shade700),),
+                Text(email, overflow: TextOverflow.ellipsis, softWrap: false, style: TextStyle(color: Colors.grey.shade700),),
                 // #myInfos
                 SizedBox(
                   height: 80,
@@ -167,7 +167,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(countPosts.toString(), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
-                            const Text("POSTS", style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16, color: Colors.grey),)
+                            const Text("POSTS", overflow: TextOverflow.fade, softWrap: false, style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16, color: Colors.grey),)
                           ],
                         ),
                       ),
@@ -181,7 +181,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(countFollowers.toString(), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
-                            const Text("FOLLOWERS", overflow: TextOverflow.fade, softWrap: false, style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16, color: Colors.grey),)
+                            const Text("FOLLOWERS", overflow: TextOverflow.ellipsis, softWrap: false, style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16, color: Colors.grey),)
                           ],
                         ),
                       ),
@@ -195,7 +195,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(countFollowing.toString(), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
-                            const Text("Following", style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16, color: Colors.grey),)
+                            const Text("Following", overflow: TextOverflow.ellipsis, softWrap: false, style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16, color: Colors.grey),)
                           ],
                         ),
                       )
