@@ -25,7 +25,6 @@ class _HomePageState extends State<HomePage> {
   PageController? _pageController;
   Map<String, String> message = {};
 
-
   _initNotification() {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       Utils.showLocalNotification({
@@ -34,7 +33,6 @@ class _HomePageState extends State<HomePage> {
       });
     });
   }
-
 
   void _apiImageURL() async {
     User user = await DataService.loadUser();

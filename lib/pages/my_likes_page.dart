@@ -19,13 +19,10 @@ class _MyLikesPageState extends State<MyLikesPage> {
   void _apiLoadLikes() {
     setState(() {isLoading = true;});
     DataService.loadLikes().then((value) => {
-      _resLoadLikes(value)
-    });
-  }
-  void _resLoadLikes(List<Post> posts) {
-    setState(() {
-      items = posts;
-      isLoading = false;
+      setState(() {
+        items = value;
+        isLoading = false;
+      })
     });
   }
 

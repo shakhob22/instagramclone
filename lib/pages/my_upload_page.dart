@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:instagramclone/models/post_model.dart';
 import 'package:instagramclone/services/file_service.dart';
+
 class MyUploadPage extends StatefulWidget {
   final PageController? pageController;
   const MyUploadPage({Key? key, this.pageController}) : super(key: key);
