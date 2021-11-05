@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:instagramclone/models/post_model.dart';
 import 'package:instagramclone/services/data_service.dart';
 import 'package:instagramclone/services/utils_service.dart';
+import 'package:pinch_zoom_image_last/pinch_zoom_image_last.dart';
 
 class MyFeedPage extends StatefulWidget {
   final PageController? pageController;
@@ -18,7 +19,7 @@ class _MyFeedPageState extends State<MyFeedPage> {
   List<Post> item = [];
   bool isLoading = false;
 
-  void _apiLoadFeeds() async {
+  Future <void> _apiLoadFeeds() async {
     setState(() {isLoading = true;});
     List<Post> list = await DataService.loadFeeds();
     list.addAll(await DataService.loadPosts());
@@ -67,13 +68,17 @@ class _MyFeedPageState extends State<MyFeedPage> {
       ),
       body: Stack(
         children: [
-          ListView.builder(
-            itemCount: item.length,
-            itemBuilder: (ctx, index) {
-              return _itemOfPost(item[index]);
-            },
+          RefreshIndicator(
+            onRefresh: _apiLoadFeeds,
+            child: ListView.builder(
+              physics: const AlwaysScrollableScrollPhysics(),
+              itemCount: item.length,
+              itemBuilder: (ctx, index) {
+                return _itemOfPost(item[index]);
+              },
+            ),
           ),
-          Utils.customLoader(isLoading, context)
+          Utils.customLoader(isLoading, context),
         ],
       ),
     );
@@ -137,13 +142,15 @@ class _MyFeedPageState extends State<MyFeedPage> {
             onDoubleTap: (){
               _apiPostLike(post);
               },
-            child: CachedNetworkImage(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.width,
-              imageUrl: post.imgPost.toString(),
-              placeholder: (context, url) => const Center(child: CircularProgressIndicator(),),
-              errorWidget: (context, url, error) => const Icon(Icons.error),
-              fit: BoxFit.cover,
+            child: PinchZoomImage(
+              image: CachedNetworkImage(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.width,
+                imageUrl: post.imgPost.toString(),
+                placeholder: (context, url) => const Center(child: CircularProgressIndicator(),),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+                fit: BoxFit.cover,
+              ),
             ),
           ),
           Row(

@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:instagramclone/pages/home_page.dart';
+import 'package:instagramclone/pages/profile_settings_page.dart';
 import 'package:instagramclone/pages/signin_page.dart';
 import 'package:instagramclone/pages/signup_page.dart';
 import 'package:instagramclone/pages/splash_page.dart';
-import 'package:instagramclone/pages/user_profile.dart';
+import 'package:instagramclone/pages/user_profile_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,7 +41,8 @@ class MyApp extends StatelessWidget {
         SplashPage.id:(context) => const SplashPage(),
         SignInPage.id:(context) => const SignInPage(),
         SignUpPage.id:(context) => const SignUpPage(),
-        UserProfile.id:(context) => const UserProfile()
+        UserProfilePage.id:(context) => const UserProfilePage(),
+        ProfileSettingsPage.id:(context) => const ProfileSettingsPage()
       },
     );
   }

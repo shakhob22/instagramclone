@@ -6,10 +6,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:instagramclone/models/post_model.dart';
 import 'package:instagramclone/models/user_model.dart';
 import 'package:instagramclone/pages/home_page.dart';
+import 'package:instagramclone/pages/profile_settings_page.dart';
 import 'package:instagramclone/services/auth_service.dart';
 import 'package:instagramclone/services/data_service.dart';
 import 'package:instagramclone/services/file_service.dart';
 import 'package:instagramclone/services/utils_service.dart';
+import 'package:pinch_zoom_image_last/pinch_zoom_image_last.dart';
 
 class MyProfilePage extends StatefulWidget {
   const MyProfilePage({Key? key}) : super(key: key);
@@ -90,6 +92,12 @@ class _MyProfilePageState extends State<MyProfilePage> {
         actions: [
           IconButton(
             onPressed: () async {
+              Navigator.pushNamed(context, ProfileSettingsPage.id);
+            },
+            icon: const Icon(Icons.edit, color: Colors.red,),
+          ),
+          IconButton(
+            onPressed: () async {
               if (await Utils.commonDialog(context, "Log out", "Are you sure want to log out?", "Confirm", "Cancel", false)) {
                 AuthService.signOutUser(context);
               }
@@ -106,8 +114,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
             padding: const EdgeInsets.all(10),
             child: Column(
               children: [
-                // #myFoto
-                Stack(
+                Row(
                   children: [
                     Container(
                       padding: const EdgeInsets.all(2),
@@ -135,27 +142,18 @@ class _MyProfilePageState extends State<MyProfilePage> {
                           )
                       ),
                     ),
-                    SizedBox(
-                      height: 92,
-                      width: 92,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          IconButton(
-                            onPressed: (){
-                              _bottomsheet(context);
-                            } ,
-                            icon: const Icon(Icons.add_circle, color: Colors.purple,),
-                          )
-                        ],
-                      ),
+                    const SizedBox(width: 10),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(fullName, overflow: TextOverflow.ellipsis, softWrap: false, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
+                        const SizedBox(height: 3,),
+                        Text(email, overflow: TextOverflow.ellipsis, softWrap: false, style: TextStyle(color: Colors.grey.shade700),),
+                        const SizedBox(height: 15,),
+                      ],
                     ),
                   ],
                 ),
-                Text(fullName, overflow: TextOverflow.ellipsis, softWrap: false, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
-                const SizedBox(height: 3,),
-                Text(email, overflow: TextOverflow.ellipsis, softWrap: false, style: TextStyle(color: Colors.grey.shade700),),
                 // #myInfos
                 SizedBox(
                   height: 80,
@@ -264,13 +262,15 @@ class _MyProfilePageState extends State<MyProfilePage> {
               onLongPress: () {
                 _apiRemovePost(post);
               },
-              child: CachedNetworkImage(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.width,
-                imageUrl: post.imgPost.toString(),
-                placeholder: (context, url) => const Center(child: CircularProgressIndicator(),),
-                errorWidget: (context, url, error) => const Icon(Icons.error),
-                fit: BoxFit.cover,
+              child: PinchZoomImage(
+                image: CachedNetworkImage(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.width,
+                  imageUrl: post.imgPost.toString(),
+                  placeholder: (context, url) => const Center(child: CircularProgressIndicator(),),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ),

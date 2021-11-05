@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:instagramclone/models/user_model.dart';
-import 'package:instagramclone/pages/user_profile.dart';
+import 'package:instagramclone/pages/user_profile_page.dart';
 import 'package:instagramclone/services/data_service.dart';
 import 'package:instagramclone/services/utils_service.dart';
 
@@ -18,7 +18,7 @@ class _MySearchPageState extends State<MySearchPage> {
   List<User> items = [];
   bool isLoading = false;
 
-  void _apiSearchUsers(String keyword) {
+  Future <void> _apiSearchUsers(String keyword) async {
     setState(() {
       isLoading = true;
     });
@@ -98,11 +98,14 @@ class _MySearchPageState extends State<MySearchPage> {
                     ),
                   ),
                   Expanded(
-                    child: ListView.builder(
-                      itemCount: items.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return _itemOfUser(items[index]);
-                      },
+                    child: RefreshIndicator(
+                      onRefresh: () => _apiSearchUsers(""),
+                      child: ListView.builder(
+                        itemCount: items.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return _itemOfUser(items[index]);
+                        },
+                      ),
                     ),
                   )
                 ],
@@ -119,7 +122,7 @@ class _MySearchPageState extends State<MySearchPage> {
       onTap: () {
         Navigator.push(context, MaterialPageRoute(
           builder: (BuildContext context) {
-            return UserProfile(someuser: user);
+            return UserProfilePage(someuser: user);
           }
         ));
       },

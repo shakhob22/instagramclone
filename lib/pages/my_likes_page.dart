@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:instagramclone/models/post_model.dart';
 import 'package:instagramclone/services/data_service.dart';
 import 'package:instagramclone/services/utils_service.dart';
+import 'package:pinch_zoom_image_last/pinch_zoom_image_last.dart';
 
 class MyLikesPage extends StatefulWidget {
   const MyLikesPage({Key? key}) : super(key: key);
@@ -16,7 +17,7 @@ class _MyLikesPageState extends State<MyLikesPage> {
   List<Post> items = [];
   bool isLoading = false;
 
-  void _apiLoadLikes() {
+  Future <void> _apiLoadLikes() async {
     setState(() {isLoading = true;});
     DataService.loadLikes().then((value) => {
       setState(() {
@@ -52,11 +53,14 @@ class _MyLikesPageState extends State<MyLikesPage> {
         body: Stack(
           children: [
             items.isNotEmpty ?
-            ListView.builder(
-              itemCount: items.length,
-              itemBuilder: (ctx, index) {
-                return _itemOfPost(items[index]);
-              },
+            RefreshIndicator(
+              onRefresh: _apiLoadLikes,
+              child: ListView.builder(
+                itemCount: items.length,
+                itemBuilder: (ctx, index) {
+                  return _itemOfPost(items[index]);
+                },
+              ),
             ) :
             const Center(
               child: Text("No liked posts"),
@@ -124,13 +128,15 @@ class _MyLikesPageState extends State<MyLikesPage> {
               ],
             ),
           ),
-          CachedNetworkImage(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.width,
-            imageUrl: post.imgPost.toString(),
-            placeholder: (context, url) => const Center(child: CircularProgressIndicator(),),
-            errorWidget: (context, url, error) => const Icon(Icons.error),
-            fit: BoxFit.cover,
+          PinchZoomImage(
+            image: CachedNetworkImage(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.width,
+              imageUrl: post.imgPost.toString(),
+              placeholder: (context, url) => const Center(child: CircularProgressIndicator(),),
+              errorWidget: (context, url, error) => const Icon(Icons.error),
+              fit: BoxFit.cover,
+            ),
           ),
           Row(
             children: [

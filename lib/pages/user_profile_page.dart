@@ -6,16 +6,16 @@ import 'package:instagramclone/models/user_model.dart';
 import 'package:instagramclone/services/data_service.dart';
 import 'package:instagramclone/services/utils_service.dart';
 
-class UserProfile extends StatefulWidget {
+class UserProfilePage extends StatefulWidget {
   static const String id = "user_profile";
   final dynamic someuser;
-  const UserProfile({Key? key, this.someuser}) : super(key: key);
+  const UserProfilePage({Key? key, this.someuser}) : super(key: key);
 
   @override
-  _UserProfileState createState() => _UserProfileState();
+  _UserProfilePageState createState() => _UserProfilePageState();
 }
 
-class _UserProfileState extends State<UserProfile> {
+class _UserProfilePageState extends State<UserProfilePage> {
 
   int count = 2;
   File? image;
@@ -127,7 +127,7 @@ class _UserProfileState extends State<UserProfile> {
                     ),
                   ),
                   const SizedBox(height: 10,),
-                  Text(fullName, overflow: TextOverflow.ellipsis, softWrap: false, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
+                  Text(fullName, overflow: TextOverflow.ellipsis, softWrap: false, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
                   const SizedBox(height: 3,),
                   //Text(email, style: TextStyle(color: Colors.grey.shade700),),
                   Stack(

@@ -175,7 +175,6 @@ class DataService{
         posts.add(post);
       }
     }
-
     return posts;
   }
   static Future<void> removePost(Post post) async{
@@ -220,11 +219,7 @@ class DataService{
       postUID = list[0];
       postID = list[1];
 
-      print("UID: " + postUID);
-      print("ID: " + postID);
-
       var querySnapshot2 = await FirebaseFirestore.instance.collection("users").doc(postUID).collection("posts").doc(postID).get();
-      print("AAAAAAAAAAAAAA: "+querySnapshot2.data().toString());
       if (querySnapshot2.data() != null) {
         Post post = Post.fromJson(querySnapshot2.data()!);
         if (post.uid == uid) post.mine = true;
@@ -232,9 +227,7 @@ class DataService{
         post.fullname = q1.data()!['fullname'];
         post.imgUser = q1.data()!['imgURL'];
         posts.add(post);
-        print("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
       } else {
-        print("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
         await FirebaseFirestore.instance.collection("users").doc(uid).collection("likes").doc(postUID+"."+postID).delete();
       }
     }

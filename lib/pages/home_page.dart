@@ -67,6 +67,7 @@ class _HomePageState extends State<HomePage> {
           const MyProfilePage()
         ],
       ),
+
       bottomNavigationBar: CupertinoTabBar(
         onTap: (int index){
           setState(() {
