@@ -56,9 +56,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
     _apiLoadUser();
   }
   void _apiLoadPosts() async {
-    setState(() {
-      isLoading = true;
-    });
+    setState(() {isLoading = true;});
     items = await DataService.loadPosts();
     setState(() {
       countPosts = items.length;
@@ -92,7 +90,11 @@ class _MyProfilePageState extends State<MyProfilePage> {
         actions: [
           IconButton(
             onPressed: () async {
-              Navigator.pushNamed(context, ProfileSettingsPage.id);
+              Navigator.push(context, MaterialPageRoute(
+                builder: (BuildContext context) {
+                  return ProfileSettingsPage(fullname: fullName, imgURL: imgURL,);
+                }
+              ));
             },
             icon: const Icon(Icons.edit, color: Colors.red,),
           ),

@@ -2,7 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:instagramclone/models/post_model.dart';
+import 'package:instagramclone/models/user_model.dart';
+import 'package:instagramclone/pages/user_profile_page.dart';
 import 'package:instagramclone/services/data_service.dart';
+import 'package:instagramclone/services/prefs_service.dart';
 import 'package:instagramclone/services/utils_service.dart';
 import 'package:pinch_zoom_image_last/pinch_zoom_image_last.dart';
 
@@ -93,43 +96,56 @@ class _MyFeedPageState extends State<MyFeedPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(70),
-                          border: Border.all(
-                            width: 1.5,
-                            color: const Color.fromRGBO(193, 53, 132, 1),
-                          )
+                GestureDetector(
+                  onTap: () async {
+                    User user = await DataService.loadUserProfile(post.uid!);
+                    String? uid = await Prefs.loadUserId();
+                    if (post.uid != uid) {
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (BuildContext context) {
+                          return UserProfilePage(someuser: user);
+                        }
+                    ));
+                    }
+                  },
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(70),
+                            border: Border.all(
+                              width: 1.5,
+                              color: const Color.fromRGBO(193, 53, 132, 1),
+                            )
+                        ),
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(40),
+                            child: post.imgUser == null ?
+                            const Image(
+                              image: AssetImage("assets/images/ic_userImage.png"),
+                              width: 40,
+                              height: 40,
+                              fit: BoxFit.cover,
+                            ) :
+                            Image.network(
+                              post.imgUser!,
+                              width: 40,
+                              height: 40,
+                              fit: BoxFit.cover,
+                            )
+                        ),
                       ),
-                      child: ClipRRect(
-                          borderRadius: BorderRadius.circular(40),
-                          child: post.imgUser == null ?
-                          const Image(
-                            image: AssetImage("assets/images/ic_userImage.png"),
-                            width: 40,
-                            height: 40,
-                            fit: BoxFit.cover,
-                          ) :
-                          Image.network(
-                            post.imgUser!,
-                            width: 40,
-                            height: 40,
-                            fit: BoxFit.cover,
-                          )
-                      ),
-                    ),
-                    const SizedBox(width: 10,),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(post.fullname!, overflow: TextOverflow.fade, softWrap: false, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
-                        Text(post.date!, overflow: TextOverflow.fade, softWrap: false, style: const TextStyle(fontSize: 14),)
-                      ],
-                    )
-                  ],
+                      const SizedBox(width: 10,),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(post.fullname!, overflow: TextOverflow.fade, softWrap: false, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
+                          Text(post.date!, overflow: TextOverflow.fade, softWrap: false, style: const TextStyle(fontSize: 14),)
+                        ],
+                      )
+                    ],
+                  ),
                 ),
                 post.mine ?
                 _moreButton(post) :
@@ -164,7 +180,10 @@ class _MyFeedPageState extends State<MyFeedPage> {
               ),
               IconButton(
                 onPressed: () async {
-                  Utils.onShare(context, post);
+                  setState(() {isLoading = true;});
+                  Utils.onShare(context, post).then((value) => {
+                    setState(() {isLoading = false;})
+                  });
                 },
                 icon: const Icon(Icons.share),
               ),
