@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:math';
-
 import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -163,7 +162,7 @@ class Utils {
   }
 
 
-  static void onShare(BuildContext context, Post post) async {
+  static Future<void> onShare(BuildContext context, Post post) async {
     String imageurl = post.imgPost!;
     final uri = Uri.parse(imageurl);
     final response = await get(uri);

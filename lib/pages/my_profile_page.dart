@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:instagramclone/models/post_model.dart';
 import 'package:instagramclone/models/user_model.dart';
 import 'package:instagramclone/pages/home_page.dart';
@@ -14,7 +13,8 @@ import 'package:instagramclone/services/utils_service.dart';
 import 'package:pinch_zoom_image_last/pinch_zoom_image_last.dart';
 
 class MyProfilePage extends StatefulWidget {
-  const MyProfilePage({Key? key}) : super(key: key);
+  final PageController? pageController;
+  const MyProfilePage({Key? key, this.pageController}) : super(key: key);
 
   @override
   _MyProfilePageState createState() => _MyProfilePageState();
@@ -260,7 +260,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
           Expanded(
             child: GestureDetector(
               onLongPress: () {
-                _apiRemovePost(post);
+                _options(post);
               },
               child: PinchZoomImage(
                 image: CachedNetworkImage(
@@ -274,67 +274,60 @@ class _MyProfilePageState extends State<MyProfilePage> {
               ),
             ),
           ),
+
           const SizedBox(
             height: 3,
           ),
           Text(
             post.caption!,
             style: TextStyle(color: Colors.black87.withOpacity(0.7)),
-            maxLines: 2,
           ),
         ],
       )
     );
   }
 
-  void pickPhoto() async {
-    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (image == null) return;
-    final imageTemporary = File(image.path);
-    setState(() {
-      this.image = imageTemporary;
-    });
-    _apiChangePhoto();
-  }
-  Future<void> takePhoto() async {
-    final image = await ImagePicker().pickImage(source: ImageSource.camera);
-    if (image == null) return;
-    final imageTemporary = File(image.path);
-    setState(() {
-      this.image = imageTemporary;
-    });
-    _apiChangePhoto();
-  }
-  void _bottomsheet(context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context){
-        return SizedBox(
-            height: 150,
-            width: double.infinity,
-            child: Column(
-              children: [
+  void _options(Post post) {
+    showDialog (
+        context: context,
+        builder: (BuildContext context) {
+          if (Platform.isAndroid) {
+            return AlertDialog(
+              actions: [
                 ListTile(
-                  leading: const Icon(Icons.photo_library),
-                  title: const Text("Pick photo"),
-                  onTap: () {
-                    pickPhoto();
+                  onTap: (){
                     Navigator.pop(context);
+                    widget.pageController!.animateToPage(2, duration: const Duration(milliseconds: 200), curve: Curves.easeIn);
                   },
+                  leading: const Icon(Icons.add),
+                  title: const Text("Add new post"),
                 ),
                 ListTile(
-                  leading: const Icon(Icons.camera_alt),
-                  title: const Text('Take photo'),
-                  onTap: () {
-                    takePhoto();
+                  onTap: (){
                     Navigator.pop(context);
+                    setState(() {isLoading = true;});
+                    Utils.onShare(context, post).then((value) => {
+                      setState(() {isLoading = false;})
+                    });
                   },
+                  leading: const Icon(Icons.share),
+                  title: const Text("Share post"),
+                ),
+                const Divider(color: Colors.grey,),
+                ListTile(
+                  onTap: (){
+                    Navigator.pop(context);
+                    _apiRemovePost(post);
+                  },
+                  leading: const Icon(Icons.delete, color: Colors.red,),
+                  title: const Text("Delete post", style: TextStyle(color: Colors.red),),
                 )
               ],
-            )
-        );
-      },
-    );
+            );
+          } else {
+            return const CupertinoAlertDialog();
+          }
+        });
   }
 
 }

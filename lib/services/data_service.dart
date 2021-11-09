@@ -139,7 +139,6 @@ class DataService{
     }
     return posts;
   }
-
   static Future<List<Post>> loadUserPosts(String uid) async {
     List<Post> posts = [];
 

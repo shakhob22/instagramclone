@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:instagramclone/models/post_model.dart';
+import 'package:instagramclone/services/data_service.dart';
 import 'package:instagramclone/services/file_service.dart';
 
 class MyUploadPage extends StatefulWidget {
@@ -30,7 +31,8 @@ class _MyUploadPageState extends State<MyUploadPage> {
       isLoading = true;
     });
     FileService.uploadPostImage(image!).then((value) => {
-      _resPostImage(value)
+      _resPostImage(value),
+      print("POST IMAGE: ${value}")
     });
   }
 
@@ -41,12 +43,11 @@ class _MyUploadPageState extends State<MyUploadPage> {
   }
 
   void _apiStorePost(Post post) async {
-    setState(() {
-      isLoading = false;
-    });
+    setState(() {isLoading = false;});
+    await DataService.storePost(post);
     captionController.text = "";
     image = null;
-    widget.pageController!.animateToPage(4, duration: const Duration(milliseconds: 200), curve: Curves.easeIn);
+    widget.pageController!.animateToPage(0, duration: const Duration(milliseconds: 200), curve: Curves.easeIn);
   }
 
   @override
@@ -168,11 +169,13 @@ class _MyUploadPageState extends State<MyUploadPage> {
       context: context,
       builder: (context){
         return SizedBox(
-          height: 150,
+          height: 140,
           width: double.infinity,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ListTile(
+                //tileColor: Colors.red,
                 leading: const Icon(Icons.photo_library),
                 title: const Text("Pick photo"),
                 onTap: () {
@@ -181,6 +184,7 @@ class _MyUploadPageState extends State<MyUploadPage> {
                 },
               ),
               ListTile(
+                //tileColor: Colors.green,
                 leading: const Icon(Icons.camera_alt),
                 title: const Text('Take photo'),
                 onTap: () {

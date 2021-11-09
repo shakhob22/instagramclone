@@ -44,35 +44,37 @@ class _MyLikesPageState extends State<MyLikesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          centerTitle: true,
-          backgroundColor: Colors.white,
-          title: const Text("Likes", style: TextStyle(fontFamily: "Billabong", fontSize: 32, color: Colors.black),),
-        ),
-        body: Stack(
-          children: [
-            items.isNotEmpty ?
-            RefreshIndicator(
-              onRefresh: _apiLoadLikes,
-              child: ListView.builder(
-                itemCount: items.length,
-                itemBuilder: (ctx, index) {
-                  return _itemOfPost(items[index]);
-                },
-              ),
-            ) :
-            const Center(
-              child: Text("No liked posts"),
+      backgroundColor: Colors.grey[200],
+      appBar: AppBar(
+        elevation: 0,
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        title: const Text("Likes", style: TextStyle(fontFamily: "Billabong", fontSize: 32, color: Colors.black),),
+      ),
+      body: Stack(
+        children: [
+          items.isNotEmpty ?
+          RefreshIndicator(
+            onRefresh: _apiLoadLikes,
+            child: ListView.builder(
+              itemCount: items.length,
+              itemBuilder: (ctx, index) {
+                return _itemOfPost(items[index]);
+              },
             ),
-            Utils.customLoader(isLoading, context)
-          ],
-        )
+          ) :
+          const Center(
+            child: Text("No liked posts"),
+          ),
+          Utils.customLoader(isLoading, context)
+        ],
+      ),
     );
   }
 
   Widget _itemOfPost(Post post) {
     return Container(
+      padding: const EdgeInsets.only(bottom: 2),
       color: Colors.white,
       child: Column(
         children: [
@@ -121,8 +123,9 @@ class _MyLikesPageState extends State<MyLikesPage> {
                 ),
                 IconButton(
                   onPressed: (){},
-                  icon: post.mine ?
-                  const Icon(Icons.more_horiz) :
+                  icon:
+                  post.mine ?
+                  _moreButton(post) :
                   const SizedBox.shrink()
                 )
               ],
@@ -147,7 +150,12 @@ class _MyLikesPageState extends State<MyLikesPage> {
                 icon: const Icon(CupertinoIcons.heart_fill, color: Colors.red, size: 28,),
               ),
               IconButton(
-                onPressed: (){},
+                onPressed: (){
+                  setState(() {isLoading = true;});
+                  Utils.onShare(context, post).then((value) => {
+                    setState(() {isLoading = false;})
+                  });
+                },
                 icon: const Icon(Icons.share),
               ),
             ],
@@ -168,11 +176,60 @@ class _MyLikesPageState extends State<MyLikesPage> {
               ),
             ),
           ),
-          const Divider(
-            color: Colors.black,
-          )
+          const SizedBox(height: 5,)
         ],
       ),
     );
+  }
+  Widget _moreButton(Post post) {
+    return PopupMenuButton<int>(
+      icon: const Icon(Icons.more_horiz),
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(15.0))
+      ),
+      itemBuilder: (context) => [
+        PopupMenuItem(
+            value: 0,
+            child: Row(
+              children: const [
+                Icon(Icons.share),
+                SizedBox(width: 5,),
+                Text("Share post")
+              ],
+            )
+        ),
+        const PopupMenuDivider(),
+        PopupMenuItem(
+            value: 1,
+            child: Row(
+              children: const [
+                Icon(Icons.delete),
+                SizedBox(width: 5,),
+                Text("Delete post", style: TextStyle(color: Colors.red),)
+              ],
+            )
+        ),
+      ],
+      onSelected: (index) {
+        switch(index) {
+          case 0: {
+            setState(() {isLoading = true;});
+            Utils.onShare(context, post).then((value) => {
+              setState(() {isLoading = false;})
+            });
+          } break;
+          case 1: {
+            _apiRemovePost(post);
+          }
+        }
+      },
+    );
+  }
+  void _apiRemovePost(Post post) async {
+    if (await Utils.commonDialog(context, "Remove post", "Do you want to remove a post?", "Confirm", "Cancel", false)) {
+      setState(() {isLoading = true;});
+      await DataService.removePost(post);
+      _apiLoadLikes();
+    }
   }
 }

@@ -64,7 +64,7 @@ class _HomePageState extends State<HomePage> {
           const MySearchPage(),
           MyUploadPage(pageController: _pageController,),
           const MyLikesPage(),
-          const MyProfilePage()
+          MyProfilePage(pageController: _pageController,)
         ],
       ),
 
@@ -104,29 +104,17 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           BottomNavigationBarItem(
-            icon: Container(
-              padding: const EdgeInsets.all(2),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(70),
-                  border: Border.all(
-                    width: 1.5,
-                    color: const Color.fromRGBO(193, 53, 132, 1),
-                  )
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(45),
-                child: (HomePage.imgURL!.isEmpty) ?
-                const Icon(
-                  Icons.person,
-                  size: 32,
-                ) :
-                Image.network(
-                  HomePage.imgURL!,
-                  width: 30,
-                  height: 30,
-                  fit: BoxFit.cover,
-                )
-              ),
+            icon: (HomePage.imgURL!.isEmpty) ?
+            const CircleAvatar(
+              foregroundImage: AssetImage("assets/images/ic_userImage.png"),
+              radius: 16,
+            )
+                :
+            Image.network(
+              HomePage.imgURL!,
+              width: 30,
+              height: 30,
+              fit: BoxFit.cover,
             )
           )
         ],

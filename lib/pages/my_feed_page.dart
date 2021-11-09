@@ -13,7 +13,6 @@ class MyFeedPage extends StatefulWidget {
   @override
   _MyFeedPageState createState() => _MyFeedPageState();
 }
-
 class _MyFeedPageState extends State<MyFeedPage> {
 
   List<Post> item = [];
@@ -28,13 +27,11 @@ class _MyFeedPageState extends State<MyFeedPage> {
       isLoading = false;
     });
   }
-
   void _apiPostLike(Post post) async {
     setState(() {isLoading = true;});
     post.liked = await DataService.likePost(post.uid, post.id);
     setState(() {isLoading = false;});
   }
-
   void _apiRemovePost(Post post) async {
     if (await Utils.commonDialog(context, "Remove post", "Do you want to remove a post?", "Confirm", "Cancel", false)) {
       setState(() {isLoading = true;});
@@ -52,6 +49,7 @@ class _MyFeedPageState extends State<MyFeedPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[200],
       appBar: AppBar(
         elevation: 0,
         centerTitle: true,
@@ -86,6 +84,7 @@ class _MyFeedPageState extends State<MyFeedPage> {
 
   Widget _itemOfPost(Post post) {
     return Container(
+      margin: const EdgeInsets.only(bottom: 2),
       color: Colors.white,
       child: Column(
         children: [
@@ -141,7 +140,7 @@ class _MyFeedPageState extends State<MyFeedPage> {
           GestureDetector(
             onDoubleTap: (){
               _apiPostLike(post);
-              },
+            },
             child: PinchZoomImage(
               image: CachedNetworkImage(
                 width: MediaQuery.of(context).size.width,
@@ -158,7 +157,7 @@ class _MyFeedPageState extends State<MyFeedPage> {
               IconButton(
                   onPressed: (){
                     _apiPostLike(post);
-                    },
+                  },
                   icon: post.liked ?
                   const Icon(CupertinoIcons.heart_fill, size: 28, color: Colors.red,) :
                   const Icon(CupertinoIcons.heart, size: 28,)
@@ -187,12 +186,11 @@ class _MyFeedPageState extends State<MyFeedPage> {
               ),
             ),
           ),
-          const Divider()
+          const SizedBox(height: 5,)
         ],
       ),
     );
   }
-
   Widget _moreButton(Post post) {
     return PopupMenuButton<int>(
         icon: const Icon(Icons.more_horiz),
@@ -201,9 +199,6 @@ class _MyFeedPageState extends State<MyFeedPage> {
         ),
       itemBuilder: (context) => [
         PopupMenuItem(
-            onTap: () {
-              widget.pageController!.animateToPage(2, duration: const Duration(milliseconds: 200), curve: Curves.easeIn);
-            },
             value: 0,
             child: Row(
               children: const [
@@ -213,46 +208,45 @@ class _MyFeedPageState extends State<MyFeedPage> {
               ],
             )
         ),
-        //const PopupMenuDivider(),
         PopupMenuItem(
             value: 1,
             child: Row(
               children: const [
+                Icon(Icons.share),
+                SizedBox(width: 5,),
+                Text("Share post",)
+              ],
+            )
+        ),
+        const PopupMenuDivider(),
+        PopupMenuItem(
+            value: 2,
+            child: Row(
+              children: const [
                 Icon(Icons.delete),
                 SizedBox(width: 5,),
-                Text("Delete this post", style: TextStyle(color: Colors.red),)
+                Text("Delete post", style: TextStyle(color: Colors.red),)
               ],
             )
         ),
       ],
       onSelected: (index) {
-          if (index == 1) {
-            _apiRemovePost(post);
+          switch(index) {
+            case 0 : {
+              widget.pageController!.animateToPage(2, duration: const Duration(milliseconds: 200), curve: Curves.easeIn);
+            } break;
+            case 1: {
+              setState(() {isLoading = true;});
+              Utils.onShare(context, post).then((value) => {
+                setState(() {isLoading = false;})
+              });
+            } break;
+            case 2: {
+              _apiRemovePost(post);
+            }
           }
       },
     );
   }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
