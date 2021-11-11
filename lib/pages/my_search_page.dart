@@ -162,10 +162,13 @@ class _MySearchPageState extends State<MySearchPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(user.fullname!, overflow: TextOverflow.ellipsis, softWrap: false, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
                 SizedBox(
-                  width: 150,
-                  child: Text(user.email!, overflow: TextOverflow.ellipsis, softWrap: false,),
+                  width: MediaQuery.of(context).size.width-210,
+                  child: Text(user.fullname!, overflow: TextOverflow.fade, softWrap: false, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width-210,
+                  child: Text(user.email!, overflow: TextOverflow.fade, softWrap: false,),
                 ),
               ],
             ),

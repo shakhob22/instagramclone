@@ -206,21 +206,33 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Expanded(
-                        child: const Text(
-                          "Already have an account",
-                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        flex: 3,
+                        child: Container(
+                          alignment: Alignment.centerRight,
+                          child: const Text(
+                            "Already have an account",
+                            overflow: TextOverflow.clip,
+                            style: TextStyle(color: Colors.white, fontSize: 16),
+                          ),
                         ),
                       ),
-                      TextButton(
-                        onPressed: (){
-                          Navigator.pushReplacementNamed(context, SignInPage.id);
-                        },
-                        child: const Text(
-                            "Sign In",
-                            style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: TextButton(
+                            onPressed: (){
+                              Navigator.pushReplacementNamed(context, SignInPage.id);
+                            },
+                            child: const Text(
+                                "Sign In",
+                                overflow: TextOverflow.fade, softWrap: true,
+                                style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+                          ),
+                        ),
                       )
                     ],
                   ),

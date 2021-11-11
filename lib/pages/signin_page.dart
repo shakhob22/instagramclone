@@ -35,11 +35,9 @@ class _SignInPageState extends State<SignInPage> {
           "Minimum 1 numeric number\n");
       return;
     }
-
     setState(() {
       isLoading = true;
     });
-
     await AuthService.signInUser(email, password).then((value) async => {
       setState(() {isLoading = false;}),
       await Prefs.saveUserId(value!.uid),
@@ -147,21 +145,31 @@ class _SignInPageState extends State<SignInPage> {
                     ),
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Expanded(
-                        child: const Text(
-                          "Don't have an account", overflow: TextOverflow.ellipsis, softWrap: false,
-                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        child: Container(
+                          alignment: Alignment.centerRight,
+                          child: const Text(
+                            "Don't have an account", overflow: TextOverflow.clip, softWrap: true,
+                            style: TextStyle(color: Colors.white, fontSize: 16),
+                          ),
                         ),
+                        flex: 5,
                       ),
-                      TextButton(
-                        onPressed: (){
-                          Navigator.pushReplacementNamed(context, SignUpPage.id);
-                        },
-                        child: const Text(
-                            "Sign Up", overflow: TextOverflow.ellipsis, softWrap: false,
-                            style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+                      Expanded(
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: TextButton(
+                            onPressed: (){
+                              Navigator.pushReplacementNamed(context, SignUpPage.id);
+                            },
+                            child: const Text(
+                                "Sign Up", overflow: TextOverflow.clip, softWrap: true,
+                                style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+                          ),
+                        ),
+                        flex: 2,
                       )
                     ],
                   ),

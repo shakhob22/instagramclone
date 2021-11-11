@@ -28,9 +28,7 @@ class Network{
       },
       "to": someone.deviceToken
     };
-
-    print("PPPPPPPPPPPOST: ${await POST(params)}");
-
+    POST(params);
   }
 
   static Future<String?> POST(Map<String, dynamic> params) async {
@@ -39,7 +37,6 @@ class Network{
     if (response.statusCode == 200 || response.statusCode == 201) {
       return response.body;
     }
-    print("status: " + response.statusCode.toString());
     return null;
   }
 

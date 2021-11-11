@@ -140,8 +140,14 @@ class _MyFeedPageState extends State<MyFeedPage> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(post.fullname!, overflow: TextOverflow.fade, softWrap: false, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
-                          Text(post.date!, overflow: TextOverflow.fade, softWrap: false, style: const TextStyle(fontSize: 14),)
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width-130,
+                            child: Text(post.fullname!, overflow: TextOverflow.fade, softWrap: false, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width-130,
+                            child: Text(post.date!, overflow: TextOverflow.fade, softWrap: false, style: const TextStyle(fontSize: 14),)
+                          ),
                         ],
                       )
                     ],

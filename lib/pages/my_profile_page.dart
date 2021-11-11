@@ -4,11 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:instagramclone/models/post_model.dart';
 import 'package:instagramclone/models/user_model.dart';
-import 'package:instagramclone/pages/home_page.dart';
 import 'package:instagramclone/pages/profile_settings_page.dart';
 import 'package:instagramclone/services/auth_service.dart';
 import 'package:instagramclone/services/data_service.dart';
-import 'package:instagramclone/services/file_service.dart';
 import 'package:instagramclone/services/utils_service.dart';
 import 'package:pinch_zoom_image_last/pinch_zoom_image_last.dart';
 
@@ -40,21 +38,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
       isLoading = false;
     });
   }
-  void _apiChangePhoto() async {
-    setState(() {
-      isLoading = true;
-    });
-    FileService.uploadUserImage(image!).then((value) => {
-      _apiUpdateUser(value),
-    });
-  }
-  void _apiUpdateUser(String downloadUrl) async {
-    User user = await DataService.loadUser();
-    user.imgURL = downloadUrl;
-    HomePage.imgURL = downloadUrl;
-    await DataService.updateUser(user);
-    _apiLoadUser();
-  }
+
   void _apiLoadPosts() async {
     setState(() {isLoading = true;});
     items = await DataService.loadPosts();
@@ -90,12 +74,22 @@ class _MyProfilePageState extends State<MyProfilePage> {
         actions: [
           IconButton(
             onPressed: () async {
-              Navigator.push(context, MaterialPageRoute(
-                builder: (BuildContext context) {
-                  return ProfileSettingsPage(fullname: fullName, imgURL: imgURL,);
-                }
-              ));
-            },
+              Map result = await Navigator.push(context, MaterialPageRoute(
+                  builder: (BuildContext context) {
+                    return ProfileSettingsPage(fullname: fullName, imgURL: imgURL,);
+                  }
+                  ));
+              if (result.containsKey("fullname")){
+                setState(() {
+                  fullName = result["fullname"];
+                });
+              }
+              if (result.containsKey("imgURL")){
+                setState(() {
+                  imgURL = result["imgURL"];
+                });
+              }
+              },
             icon: const Icon(Icons.edit, color: Colors.red,),
           ),
           IconButton(
@@ -148,7 +142,10 @@ class _MyProfilePageState extends State<MyProfilePage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(fullName, overflow: TextOverflow.ellipsis, softWrap: false, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width-130,
+                          child: Text(fullName, overflow: TextOverflow.fade, softWrap: false, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
+                        ),
                         const SizedBox(height: 3,),
                         Text(email, overflow: TextOverflow.ellipsis, softWrap: false, style: TextStyle(color: Colors.grey.shade700),),
                         const SizedBox(height: 15,),

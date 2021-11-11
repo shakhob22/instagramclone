@@ -1,12 +1,8 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttericon/elusive_icons.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:instagramclone/models/user_model.dart';
-import 'package:instagramclone/services/data_service.dart';
 import 'package:instagramclone/services/file_service.dart';
 import 'package:instagramclone/services/prefs_service.dart';
 import 'package:instagramclone/services/utils_service.dart';
@@ -38,6 +34,10 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
     imgURL = widget.imgURL.toString();
     fullnameController.value = TextEditingValue(text: fullname);
   }
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,8 +52,9 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
               Visibility(
                 visible: modified,
                 child: IconButton(
-                  onPressed: (){
+                  onPressed: () {
                     _apiUpdateUserName();
+                    Navigator.pop(context, {"fullname": fullname, "imgURL": imgURL});
                   },
                   icon: const Icon(Icons.done, color: Colors.green,),
                 ),
@@ -80,7 +81,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                           ),
                           child: ClipRRect(
                               borderRadius: BorderRadius.circular(35),
-                              child: widget.imgURL == "" ?
+                              child: imgURL == "" ?
                               const Image(
                                 height: 70,
                                 width: 70,
@@ -88,7 +89,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                                 fit: BoxFit.cover,
                               ) :
                               Image.network(
-                                widget.imgURL.toString(),
+                                imgURL.toString(),
                                 height: 70,
                                 width: 70,
                                 fit: BoxFit.cover,
@@ -129,8 +130,6 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                     const SizedBox(height: 20,),
                     TextField(
                       onChanged: (str) {
-                        print("SSSSSSSSSSSSSSSS: " + str);
-                        print("SSSSSSSSSSSSSSSS: " + fullname);
                         if (fullname != str) {
                           setState(() {
                             modified = true;
