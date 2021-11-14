@@ -25,7 +25,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
   File? image;
   bool isLoading = false;
   String fullname = "", imgURL = "";
-  bool modified = false;
+  bool modifiedName = false, modifiedImg = false;
 
   @override
   void initState() {
@@ -34,6 +34,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
     imgURL = widget.imgURL.toString();
     fullnameController.value = TextEditingValue(text: fullname);
   }
+
   @override
   void dispose() {
     super.dispose();
@@ -50,11 +51,13 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
             elevation: 0,
             actions: [
               Visibility(
-                visible: modified,
+                visible: modifiedName || modifiedImg,
                 child: IconButton(
                   onPressed: () {
-                    _apiUpdateUserName();
-                    Navigator.pop(context, {"fullname": fullname, "imgURL": imgURL});
+                    setState(() {
+                      isLoading = true;
+                    });
+                    _apiSaveSettings();
                   },
                   icon: const Icon(Icons.done, color: Colors.green,),
                 ),
@@ -86,6 +89,13 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                                 height: 70,
                                 width: 70,
                                 image: AssetImage("assets/images/ic_userImage.png"),
+                                fit: BoxFit.cover,
+                              ) :
+                              modifiedImg ?
+                              Image.file(
+                                image!,
+                                height: 70,
+                                width: 70,
                                 fit: BoxFit.cover,
                               ) :
                               Image.network(
@@ -132,11 +142,11 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                       onChanged: (str) {
                         if (fullname != str) {
                           setState(() {
-                            modified = true;
+                            modifiedName = true;
                           });
                         } else {
                           setState(() {
-                            modified = false;
+                            modifiedName = false;
                           });
                         }
                       },
@@ -153,51 +163,57 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
         ),
         Utils.customLoader(isLoading, context)
       ],
-
     );
   }
 
-  /*void _apiLoadUser() async {
-    User user = await DataService.loadUser();
+  void _apiRemovePhoto() {
     setState(() {
-      fullname = user.fullname!;
-      imgURL = user.imgURL!;
-      isLoading = false;
+      imgURL = "";
+      modifiedImg = true;
     });
-  }*/
+  }
   void _apiChangePhoto() async {
-    setState(() {isLoading = true;});
-    FileService.uploadUserImage(image!).then((value) => {
-      _apiUpdateUserImage(value),
-    });
-  }
-  void _apiUpdateUserImage(String downloadUrl) async {
-    //User user = await DataService.loadUser();
-    //user.imgURL = downloadUrl;
-    HomePage.imgURL = downloadUrl;
-    setState(() {imgURL = downloadUrl;});
-    String? uid = await Prefs.loadUserId();
-    FirebaseFirestore.instance.collection("users").doc(uid).update({
-      "imgURL": downloadUrl
-    });
     setState(() {
-      isLoading = false;
+      modifiedImg = true;
     });
   }
-
-  void _apiUpdateUserName() async {
+  Future <void> _apiUpdateUserImage() async {
+    String? uid = await Prefs.loadUserId();
+    if (imgURL.isEmpty) {
+      await FirebaseFirestore.instance.collection("users").doc(uid).update({
+        "imgURL": ""
+      });
+    } else {
+      String downloadUrl = await FileService.uploadUserImage(image!);
+      HomePage.imgURL = downloadUrl;
+      setState(() {imgURL = downloadUrl;});
+      FirebaseFirestore.instance.collection("users").doc(uid).update({
+        "imgURL": downloadUrl
+      });
+    }
+  }
+  Future <void> _apiUpdateUserName() async {
     String fullname = fullnameController.text.toString().trim();
     setState(() {
-      isLoading = true;
       this.fullname = fullname;
     });
     String? uid = await Prefs.loadUserId();
     await FirebaseFirestore.instance.collection("users").doc(uid).update({
       "fullname": fullname
     });
+  }
+
+  void _apiSaveSettings () async {
     setState(() {
-      isLoading = false;
+      isLoading = true;
     });
+    if (modifiedName) {
+      await _apiUpdateUserName();
+    }
+    if (modifiedImg) {
+      await _apiUpdateUserImage();
+    }
+    Navigator.pop(context, {"fullname": fullname, "imgURL": imgURL});
   }
 
   void pickPhoto() async {
@@ -249,7 +265,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                 leading: const Icon(Icons.delete, color: Colors.red,),
                 title: const Text("Delete", style: TextStyle(color: Colors.red),),
                 onTap: () {
-                  pickPhoto();
+                  _apiRemovePhoto();
                   Navigator.pop(context);
                 },
               ),

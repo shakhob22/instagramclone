@@ -121,7 +121,7 @@ class _MyFeedPageState extends State<MyFeedPage> {
                         ),
                         child: ClipRRect(
                             borderRadius: BorderRadius.circular(40),
-                            child: post.imgUser == null ?
+                            child: post.imgUser!.isEmpty ?
                             const Image(
                               image: AssetImage("assets/images/ic_userImage.png"),
                               width: 40,

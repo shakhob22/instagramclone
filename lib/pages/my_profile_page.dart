@@ -252,7 +252,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
 
   Widget _itemOfPost(Post post) {
     return Container(
-        margin: const EdgeInsets.all(5),
+      margin: const EdgeInsets.all(5),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

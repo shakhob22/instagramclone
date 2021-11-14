@@ -14,6 +14,7 @@ class MyLikesPage extends StatefulWidget {
 }
 
 class _MyLikesPageState extends State<MyLikesPage> {
+
   List<Post> items = [];
   bool isLoading = false;
 
@@ -26,12 +27,18 @@ class _MyLikesPageState extends State<MyLikesPage> {
       })
     });
   }
-
   void _apiPostUnlike(Post post) async {
     setState(() {isLoading = true;});
     post.liked = await DataService.likePost(post.uid, post.id);
     _apiLoadLikes();
     setState(() {isLoading = false;});
+  }
+  void _apiRemovePost(Post post) async {
+    if (await Utils.commonDialog(context, "Remove post", "Do you want to remove a post?", "Confirm", "Cancel", false)) {
+      setState(() {isLoading = true;});
+      await DataService.removePost(post);
+      _apiLoadLikes();
+    }
   }
 
   @override
@@ -57,6 +64,7 @@ class _MyLikesPageState extends State<MyLikesPage> {
           RefreshIndicator(
             onRefresh: _apiLoadLikes,
             child: ListView.builder(
+              physics: const BouncingScrollPhysics(),
               itemCount: items.length,
               itemBuilder: (ctx, index) {
                 return _itemOfPost(items[index]);
@@ -74,7 +82,7 @@ class _MyLikesPageState extends State<MyLikesPage> {
 
   Widget _itemOfPost(Post post) {
     return Container(
-      padding: const EdgeInsets.only(bottom: 2),
+      margin: const EdgeInsets.only(bottom: 2),
       color: Colors.white,
       child: Column(
         children: [
@@ -96,7 +104,7 @@ class _MyLikesPageState extends State<MyLikesPage> {
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(40),
-                        child: post.imgUser == null ?
+                        child: post.imgUser!.isEmpty ?
                         const Image(
                           image: AssetImage("assets/images/ic_userImage.png"),
                           width: 40,
@@ -231,11 +239,5 @@ class _MyLikesPageState extends State<MyLikesPage> {
       },
     );
   }
-  void _apiRemovePost(Post post) async {
-    if (await Utils.commonDialog(context, "Remove post", "Do you want to remove a post?", "Confirm", "Cancel", false)) {
-      setState(() {isLoading = true;});
-      await DataService.removePost(post);
-      _apiLoadLikes();
-    }
-  }
+
 }
