@@ -84,18 +84,19 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                           ),
                           child: ClipRRect(
                               borderRadius: BorderRadius.circular(35),
-                              child: imgURL == "" ?
-                              const Image(
-                                height: 70,
-                                width: 70,
-                                image: AssetImage("assets/images/ic_userImage.png"),
-                                fit: BoxFit.cover,
-                              ) :
-                              modifiedImg ?
+                              child:
+                              (modifiedImg)&&(image!=null) ?
                               Image.file(
                                 image!,
                                 height: 70,
                                 width: 70,
+                                fit: BoxFit.cover,
+                              ) :
+                              imgURL == "" ?
+                              const Image(
+                                height: 70,
+                                width: 70,
+                                image: AssetImage("assets/images/ic_userImage.png"),
                                 fit: BoxFit.cover,
                               ) :
                               Image.network(
@@ -169,6 +170,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
   void _apiRemovePhoto() {
     setState(() {
       imgURL = "";
+      HomePage.imgURL = "";
       modifiedImg = true;
     });
   }
@@ -179,7 +181,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
   }
   Future <void> _apiUpdateUserImage() async {
     String? uid = await Prefs.loadUserId();
-    if (imgURL.isEmpty) {
+    if ((imgURL.isEmpty)&&(modifiedImg)&&(image == null)) {
       await FirebaseFirestore.instance.collection("users").doc(uid).update({
         "imgURL": ""
       });
