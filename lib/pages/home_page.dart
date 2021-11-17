@@ -104,35 +104,35 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           BottomNavigationBarItem(
-            icon: (HomePage.imgURL!.isEmpty) ?
-            Container(
-              padding: const EdgeInsets.all(2),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(70),
-                  border: Border.all(
-                    width: 1.5,
-                    color: const Color.fromRGBO(193, 53, 132, 1),
-                  )
-              ),
-              child: const CircleAvatar(
-                foregroundImage: AssetImage("assets/images/ic_userImage.png"),
-                radius: 14,
-              ),
-            ) :
-            Container(
-              padding: const EdgeInsets.all(2),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(70),
-                  border: Border.all(
-                    width: 1.5,
-                    color: const Color.fromRGBO(193, 53, 132, 1),
-                  )
-              ),
-              child: CircleAvatar(
-                foregroundImage: NetworkImage(HomePage.imgURL!,),
-                radius: 16,
-              ),
-            )
+              icon: (HomePage.imgURL!.isEmpty) ?
+              Container(
+                padding: const EdgeInsets.all(2),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(70),
+                    border: Border.all(
+                      width: 1.5,
+                      color: const Color.fromRGBO(193, 53, 132, 1),
+                    )
+                ),
+                child: const CircleAvatar(
+                  foregroundImage: AssetImage("assets/images/ic_userImage.png"),
+                  radius: 14,
+                ),
+              ) :
+              Container(
+                padding: const EdgeInsets.all(2),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(70),
+                    border: Border.all(
+                      width: 1.5,
+                      color: const Color.fromRGBO(193, 53, 132, 1),
+                    )
+                ),
+                child: CircleAvatar(
+                  foregroundImage: NetworkImage(HomePage.imgURL!,),
+                  radius: 16,
+                ),
+              )
           )
         ],
       ),

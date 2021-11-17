@@ -66,186 +66,186 @@ class _MyProfilePageState extends State<MyProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: const Text("Profile", style: TextStyle(color: Colors.black, fontFamily: "Billabong", fontSize: 32),),
-        actions: [
-          IconButton(
-            onPressed: () async {
-              Map result = await Navigator.push(context, MaterialPageRoute(
-                  builder: (BuildContext context) {
-                    return ProfileSettingsPage(fullname: fullName, imgURL: imgURL,);
-                  }
-                  ));
-              if (result.containsKey("fullname")){
-                setState(() {
-                  fullName = result["fullname"];
-                });
-              }
-              if (result.containsKey("imgURL")){
-                setState(() {
-                  imgURL = result["imgURL"];
-                });
-              }
+        appBar: AppBar(
+          centerTitle: true,
+          backgroundColor: Colors.white,
+          elevation: 0,
+          title: const Text("Profile", style: TextStyle(color: Colors.black, fontFamily: "Billabong", fontSize: 32),),
+          actions: [
+            IconButton(
+              onPressed: () async {
+                Map result = await Navigator.push(context, MaterialPageRoute(
+                    builder: (BuildContext context) {
+                      return ProfileSettingsPage(fullname: fullName, imgURL: imgURL,);
+                    }
+                ));
+                if (result.containsKey("fullname")){
+                  setState(() {
+                    fullName = result["fullname"];
+                  });
+                }
+                if (result.containsKey("imgURL")){
+                  setState(() {
+                    imgURL = result["imgURL"];
+                  });
+                }
               },
-            icon: const Icon(Icons.edit, color: Colors.red,),
-          ),
-          IconButton(
-            onPressed: () async {
-              if (await Utils.commonDialog(context, "Log out", "Are you sure want to log out?", "Confirm", "Cancel", false)) {
-                AuthService.signOutUser(context);
-              }
-            },
-            icon: const Icon(Icons.exit_to_app, color: Colors.red,),
-          )
-        ],
-      ),
-      body: Stack(
-        children: [
-          Container(
-            color: Colors.white,
-            width: MediaQuery.of(context).size.width,
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(70),
-                          border: Border.all(
-                            width: 1.5,
-                            color: const Color.fromRGBO(193, 53, 132, 1),
-                          )
-                      ),
-                      child: ClipRRect(
-                          borderRadius: BorderRadius.circular(35),
-                          child: imgURL == "" ?
-                          const Image(
-                            height: 70,
-                            width: 70,
-                            image: AssetImage("assets/images/ic_userImage.png"),
-                            fit: BoxFit.cover,
-                          ) :
-                          Image.network(
-                            imgURL,
-                            height: 70,
-                            width: 70,
-                            fit: BoxFit.cover,
-                          )
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width-130,
-                          child: Text(fullName, overflow: TextOverflow.fade, softWrap: false, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
+              icon: const Icon(Icons.edit, color: Colors.red,),
+            ),
+            IconButton(
+              onPressed: () async {
+                if (await Utils.commonDialog(context, "Log out", "Are you sure want to log out?", "Confirm", "Cancel", false)) {
+                  AuthService.signOutUser(context);
+                }
+              },
+              icon: const Icon(Icons.exit_to_app, color: Colors.red,),
+            )
+          ],
+        ),
+        body: Stack(
+          children: [
+            Container(
+              color: Colors.white,
+              width: MediaQuery.of(context).size.width,
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(70),
+                            border: Border.all(
+                              width: 1.5,
+                              color: const Color.fromRGBO(193, 53, 132, 1),
+                            )
                         ),
-                        const SizedBox(height: 3,),
-                        Text(email, overflow: TextOverflow.ellipsis, softWrap: false, style: TextStyle(color: Colors.grey.shade700),),
-                        const SizedBox(height: 15,),
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(35),
+                            child: imgURL == "" ?
+                            const Image(
+                              height: 70,
+                              width: 70,
+                              image: AssetImage("assets/images/ic_userImage.png"),
+                              fit: BoxFit.cover,
+                            ) :
+                            Image.network(
+                              imgURL,
+                              height: 70,
+                              width: 70,
+                              fit: BoxFit.cover,
+                            )
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width-130,
+                            child: Text(fullName, overflow: TextOverflow.fade, softWrap: false, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
+                          ),
+                          const SizedBox(height: 3,),
+                          Text(email, overflow: TextOverflow.ellipsis, softWrap: false, style: TextStyle(color: Colors.grey.shade700),),
+                          const SizedBox(height: 15,),
+                        ],
+                      ),
+                    ],
+                  ),
+                  // #myInfos
+                  SizedBox(
+                    height: 80,
+                    width: MediaQuery.of(context).size.width,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(countPosts.toString(), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
+                              const Text("POSTS", overflow: TextOverflow.fade, softWrap: false, style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16, color: Colors.grey),)
+                            ],
+                          ),
+                        ),
+                        const VerticalDivider(
+                          color: Colors.grey,
+                          indent: 25,
+                          endIndent: 25,
+                        ),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(countFollowers.toString(), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
+                              const Text("FOLLOWERS", overflow: TextOverflow.ellipsis, softWrap: false, style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16, color: Colors.grey),)
+                            ],
+                          ),
+                        ),
+                        const VerticalDivider(
+                          color: Colors.grey,
+                          indent: 25,
+                          endIndent: 25,
+                        ),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(countFollowing.toString(), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
+                              const Text("Following", overflow: TextOverflow.ellipsis, softWrap: false, style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16, color: Colors.grey),)
+                            ],
+                          ),
+                        )
                       ],
                     ),
-                  ],
-                ),
-                // #myInfos
-                SizedBox(
-                  height: 80,
-                  width: MediaQuery.of(context).size.width,
-                  child: Row(
+                  ),
+                  // #CountButton
+                  Row(
                     children: [
                       Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(countPosts.toString(), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
-                            const Text("POSTS", overflow: TextOverflow.fade, softWrap: false, style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16, color: Colors.grey),)
-                          ],
+                        child: IconButton(
+                          onPressed: (){
+                            setState(() {
+                              count = 1;
+                            });
+                          },
+                          icon: Icon(
+                              Icons.list_alt,
+                              color: (count == 1) ? Colors.blue:Colors.black
+                          ),
                         ),
                       ),
-                      const VerticalDivider(
-                        color: Colors.grey,
-                        indent: 25,
-                        endIndent: 25,
-                      ),
                       Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(countFollowers.toString(), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
-                            const Text("FOLLOWERS", overflow: TextOverflow.ellipsis, softWrap: false, style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16, color: Colors.grey),)
-                          ],
-                        ),
-                      ),
-                      const VerticalDivider(
-                        color: Colors.grey,
-                        indent: 25,
-                        endIndent: 25,
-                      ),
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(countFollowing.toString(), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
-                            const Text("Following", overflow: TextOverflow.ellipsis, softWrap: false, style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16, color: Colors.grey),)
-                          ],
+                        child: IconButton(
+                          onPressed: (){
+                            setState(() {
+                              count = 2;
+                            });
+                          },
+                          icon: Icon(
+                              Icons.grid_view,
+                              color: (count == 2) ? Colors.blue:Colors.black
+                          ),
                         ),
                       )
                     ],
                   ),
-                ),
-                // #CountButton
-                Row(
-                  children: [
-                    Expanded(
-                      child: IconButton(
-                        onPressed: (){
-                          setState(() {
-                            count = 1;
-                          });
-                        },
-                        icon: Icon(
-                            Icons.list_alt,
-                            color: (count == 1) ? Colors.blue:Colors.black
-                        ),
-                      ),
+                  // #myPosts
+                  Expanded(
+                    child: GridView.builder(
+                        itemCount: items.length,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: count),
+                        itemBuilder: (ctx, index){
+                          return _itemOfPost(items[index]);
+                        }
                     ),
-                    Expanded(
-                      child: IconButton(
-                        onPressed: (){
-                          setState(() {
-                            count = 2;
-                          });
-                        },
-                        icon: Icon(
-                            Icons.grid_view,
-                            color: (count == 2) ? Colors.blue:Colors.black
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                // #myPosts
-                Expanded(
-                  child: GridView.builder(
-                      itemCount: items.length,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: count),
-                      itemBuilder: (ctx, index){
-                        return _itemOfPost(items[index]);
-                      }
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
-          ),
-          Utils.customLoader(isLoading, context)
-        ],
-      )
+            Utils.customLoader(isLoading, context)
+          ],
+        )
 
     );
   }
