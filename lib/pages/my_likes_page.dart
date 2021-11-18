@@ -2,7 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:instagramclone/models/post_model.dart';
+import 'package:instagramclone/models/user_model.dart';
+import 'package:instagramclone/pages/user_profile_page.dart';
 import 'package:instagramclone/services/data_service.dart';
+import 'package:instagramclone/services/prefs_service.dart';
 import 'package:instagramclone/services/utils_service.dart';
 import 'package:pinch_zoom_image_last/pinch_zoom_image_last.dart';
 
@@ -64,7 +67,6 @@ class _MyLikesPageState extends State<MyLikesPage> {
           RefreshIndicator(
             onRefresh: _apiLoadLikes,
             child: ListView.builder(
-              physics: const BouncingScrollPhysics(),
               itemCount: items.length,
               itemBuilder: (ctx, index) {
                 return _itemOfPost(items[index]);
@@ -91,49 +93,65 @@ class _MyLikesPageState extends State<MyLikesPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(70),
-                          border: Border.all(
-                            width: 1.5,
-                            color: const Color.fromRGBO(193, 53, 132, 1),
-                          )
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(40),
-                        child: post.imgUser!.isEmpty ?
-                        const Image(
-                          image: AssetImage("assets/images/ic_userImage.png"),
-                          width: 40,
-                          height: 40,
-                          fit: BoxFit.cover,
-                        ) :
-                        Image.network(
-                          post.imgUser!,
-                          width: 40,
-                          height: 40,
-                          fit: BoxFit.cover,
-                        )
-                      ),
-                    ),
-                    const SizedBox(width: 10,),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width-130,
-                          child: Text(post.fullname!, overflow: TextOverflow.fade, softWrap: false, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
+                GestureDetector(
+                  onTap: () async {
+                    User user = await DataService.loadUserProfile(post.uid!);
+                    setState(() {
+                      user.followed = true;
+                    });
+                    String? uid = await Prefs.loadUserId();
+                    if (post.uid != uid) {
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return UserProfilePage(someuser: user);
+                          }
+                      ));
+                    }
+                  },
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(70),
+                            border: Border.all(
+                              width: 1.5,
+                              color: const Color.fromRGBO(193, 53, 132, 1),
+                            )
                         ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width-130,
-                          child: Text(post.date!, overflow: TextOverflow.fade, softWrap: false, style: const TextStyle(fontSize: 14),)
-                        )
-                      ],
-                    )
-                  ],
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(40),
+                          child: post.imgUser!.isEmpty ?
+                          const Image(
+                            image: AssetImage("assets/images/ic_userImage.png"),
+                            width: 40,
+                            height: 40,
+                            fit: BoxFit.cover,
+                          ) :
+                          Image.network(
+                            post.imgUser!,
+                            width: 40,
+                            height: 40,
+                            fit: BoxFit.cover,
+                          )
+                        ),
+                      ),
+                      const SizedBox(width: 10,),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width-130,
+                            child: Text(post.fullname!, overflow: TextOverflow.fade, softWrap: false, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width-130,
+                            child: Text(post.date!, overflow: TextOverflow.fade, softWrap: false, style: const TextStyle(fontSize: 14),)
+                          )
+                        ],
+                      )
+                    ],
+                  ),
                 ),
                 IconButton(
                   onPressed: (){},

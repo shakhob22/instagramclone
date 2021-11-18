@@ -99,6 +99,9 @@ class _MyFeedPageState extends State<MyFeedPage> {
                 GestureDetector(
                   onTap: () async {
                     User user = await DataService.loadUserProfile(post.uid!);
+                    setState(() {
+                      user.followed = true;
+                    });
                     String? uid = await Prefs.loadUserId();
                     if (post.uid != uid) {
                       Navigator.push(context, MaterialPageRoute(
